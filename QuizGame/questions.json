@@ -1,0 +1,29 @@
+{
+    "questions": [
+                    {
+                        "question":"Vad heter Jag",
+                        "answerOne":"Axel",
+                        "answerTwo":"Peder",
+                        "answerThree":"Markus",
+                        "answerFour":"Jon",
+                        "correct":"1"
+                    },
+                  {
+                  "question":"Vad heter Axels mamma",
+                  "answerOne":"Anna",
+                  "answerTwo":"Karin",
+                  "answerThree":"Anna-Karin",
+                  "answerFour":"Lena",
+                  "correct":"3"
+                  },
+                    {
+                        "question":"Hur gammal är Jag",
+                        "answerOne":"20",
+                        "answerTwo":"43",
+                        "answerThree":"60",
+                        "answerFour":"12",
+                        "correct":"2"
+                    }
+ 
+               ]
+}
