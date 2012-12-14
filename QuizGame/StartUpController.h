@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "GCTurnBasedMatchHelper.h"
 
-@interface StartUpController : UIViewController
+@interface StartUpController : UIViewController<GCTurnBasedMatchHelperDelegate>
 
+@property (weak, nonatomic) IBOutlet UIButton *startgameBtn;
 - (IBAction)startQuizPressed:(id)sender;
 - (IBAction)signInWithGameCenterPressed:(id)sender;
 @end

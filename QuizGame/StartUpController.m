@@ -28,6 +28,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+          [GCTurnBasedMatchHelper sharedInstance].delegate = self;
 }
 
 - (void)didReceiveMemoryWarning
@@ -41,18 +42,33 @@
 }
 
 - (IBAction)signInWithGameCenterPressed:(id)sender {
-    [[GCTurnBasedMatchHelper sharedInstance]
-     findMatchWithMinPlayers:2 maxPlayers:2 viewController:self];
+
+
+  
+    
 }
+
+-(void)enterNewGame:(GKTurnBasedMatch *)match
+{
+
+}
+
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
    QuizViewController *vc = (QuizViewController*)[segue destinationViewController];
     vc.category = [NSString stringWithFormat:@"%d", 27];
     
 }
-
+-(void)userDidAuthenticate {
+    UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"" message:@"kulkul" delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
+    [av show];
+    [[GCTurnBasedMatchHelper sharedInstance]
+     findMatchWithMinPlayers:2 maxPlayers:2 viewController:self];
+    
+}
 - (void)viewDidUnload {
     
+    [self setStartgameBtn:nil];
     [super viewDidUnload];
 }
 @end

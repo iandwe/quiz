@@ -34,6 +34,7 @@
     NSDictionary *questionDict;
     
 }
+
 @synthesize questionLabel, statusLabel, btnFour, btnOne, btnThree, btnTwo, category;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -58,14 +59,13 @@
         NSArray *results = [self.context executeFetchRequest:fetchRequest error:0];
         Round *round = [results objectAtIndex:0];
     
-        if ([results count]<1) {
+        if ([results count]<1)
+        {
             [self insertNewObject];
-
         }
-        else {
-
+        else
+        {
             [self.context deleteObject:[results objectAtIndex:0]];
-
         }
         NSError *error = nil;
         if (![self.context save:&error]) {
@@ -82,9 +82,7 @@
 }
 -(void)insertNewObject
 {
-    
-    
-    
+ 
     // Create a new instance of the entity managed by the fetched results controller.
     Round *event;
     event = [NSEntityDescription insertNewObjectForEntityForName:@"Round" inManagedObjectContext:self.context];
@@ -111,7 +109,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [GCTurnBasedMatchHelper sharedInstance].delegate = self;
+    
+    NSLog(@"View did load quizviewcontroller");
+   // [GCTurnBasedMatchHelper sharedInstance].delegate = self;
     
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"questions" ofType:@"json"];
     NSString *jsonString = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
@@ -119,7 +119,7 @@
     SBJsonParser *jsonParser = [SBJsonParser new];
     dict = [jsonParser objectWithString:jsonString];
     
-    NSLog(@"json %@", [[dict objectForKey:@"questions"] objectAtIndex:1]);
+    NSLog(@"json view did load %@", [[dict objectForKey:@"questions"] objectAtIndex:1]);
     questionDict = [[dict objectForKey:@"questions"] objectAtIndex:turn];
     
 
@@ -128,6 +128,8 @@
 
     // Do any additional setup after loading the view from its nib.
 }
+
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -140,13 +142,19 @@
     
 }
 - (IBAction)sendTurn:(id)sender {
+    NSLog(@"send turn");
      NSString *qr = [NSString stringWithFormat:@"%d%d%d", questionArr[0], questionArr[1], questionArr[2]];
     NSLog(@"players %@", [[GCTurnBasedMatchHelper sharedInstance] currentMatch].participants);
     NSString *str = [NSString  stringWithFormat:@"%@%@", qr, category];
     [self sendTurnString:str];
-}                                                   
+}
+
+
+
+
+
 -(void)sendTurnString:(NSString*)string {
-    
+    NSLog(@"send turnstring");
     GKTurnBasedMatch *currentMatch =
     [[GCTurnBasedMatchHelper sharedInstance] currentMatch];
     NSString *newStoryString;
@@ -186,7 +194,7 @@
         [currentMatch endMatchInTurnWithMatchData:data
                                 completionHandler:^(NSError *error) {
                                     if (error) {
-                                        NSLog(@"%@", error);
+                                        NSLog(@"error in send turn string %@", error);
                                     }
                                 }];
         statusLabel.text = @"Game has ended";
@@ -195,7 +203,7 @@
         [currentMatch endTurnWithNextParticipant:nextParticipant
                                        matchData:data completionHandler:^(NSError *error) {
                                            if (error) {
-                                               NSLog(@"%@", error);
+                                               NSLog(@"error in data length < 3800 %@", error);
                                                statusLabel.text =
                                                @"Oops, there was a problem.  Try that again.";
                                            } else {
@@ -204,9 +212,10 @@
                                        }];
     }
     NSLog(@"Send Turn, %@, %@", data, nextParticipant);
-
+    [self.navigationController popToRootViewControllerAnimated:TRUE];
+    //[self performSegueWithIdentifier:@"results" sender:self];
 }
-#pragma mark - GCTurnBasedMatchHelperDelegate
+/*#pragma mark - GCTurnBasedMatchHelperDelegate
 
 -(void)enterNewGame:(GKTurnBasedMatch *)match {
     NSLog(@"Entering new game...");
@@ -230,7 +239,7 @@
     }
   
 }
-
+*/
 -(void)layoutMatch:(GKTurnBasedMatch *)match {
     NSLog(@"Viewing match where it's not our turn...");
     NSString *statusString;
@@ -285,12 +294,14 @@
 
 -(void)presentGameStatsWithString:(NSString*)string {
     [self insertNewObject];
+     NSLog(@"presentGameStatsWithString");
     answerTwo = [[NSUserDefaults standardUserDefaults] objectForKey:@"score"];;
     
-    [self performSegueWithIdentifier:@"results" sender:self];
+    //[self performSegueWithIdentifier:@"results" sender:self];
     
 }
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    NSLog(@"prepareForSegue");
     AXLAppDelegate *appDel = (AXLAppDelegate*)[[UIApplication sharedApplication] delegate];
     
     GameViewController *gv = (GameViewController*)[segue destinationViewController];
@@ -307,12 +318,13 @@
     [super viewDidUnload];
 }
 - (IBAction)findPlayers:(id)sender {
+    NSLog(@"findPlayers");
     [[GCTurnBasedMatchHelper sharedInstance]
      findMatchWithMinPlayers:2 maxPlayers:2 viewController:self];
 }
 
 - (IBAction)answerBtnPressed:(UIButton*)sender {
-
+NSLog(@"answerbtnpressed");
     turn++;
     //playerRounds++;
    // NSLog(@"playerrounds1 %d", playerRounds);
@@ -349,7 +361,7 @@
 
 -(void)checkPlayerOneAnswerWithTag:(int)tag {
 
-    
+NSLog(@"checkPlayerOneAnswerWithTag");    
     if (tag == correctAnswer) {
         questionArr[turn-1] = 1;
         playerOneCorrectAnswers++;
@@ -364,6 +376,7 @@
     
    
 }
+
 -(void)checkPlayerTwoAnswerWithTag:(int)tag {
     NSLog(@"playerrounds2 %d", playerRounds);
     
@@ -382,6 +395,7 @@
 }
 
 -(void)setQuestionsWithDict:(NSDictionary*)dictionary {
+    NSLog(@"setQuestionsWithDict");
     questionLabel.text = [dictionary valueForKey:@"question"];
     [btnOne setTitle:[dictionary valueForKey:@"answerOne"] forState:UIControlStateNormal];
     [btnTwo setTitle:[dictionary valueForKey:@"answerTwo"] forState:UIControlStateNormal];

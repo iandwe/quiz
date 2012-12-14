@@ -10,7 +10,7 @@
 #import "GCTurnBasedMatchHelper.h"
 
 
-@interface QuizViewController : UIViewController<UITextFieldDelegate, GCTurnBasedMatchHelperDelegate, GKTurnBasedEventHandlerDelegate>
+@interface QuizViewController : UIViewController<UITextFieldDelegate>
 
 - (IBAction)sendTurn:(id)sender;
 - (IBAction)goBack:(id)sender;

@@ -10,6 +10,7 @@
 #import <GameKit/GameKit.h>
 
 @protocol GCTurnBasedMatchHelperDelegate
+-(void)userDidAuthenticate;
 - (void)enterNewGame:(GKTurnBasedMatch *)match;
 - (void)layoutMatch:(GKTurnBasedMatch *)match;
 - (void)takeTurn:(GKTurnBasedMatch *)match;

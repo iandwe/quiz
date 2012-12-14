@@ -73,6 +73,9 @@ static GCTurnBasedMatchHelper *sharedHelper = nil;
         NSLog(@"Authentication changed: player authenticated.");
         //[self loadPlayerData:[GKLocalPlayer localPlayer].]
         userAuthenticated = TRUE;
+        [delegate userDidAuthenticate];
+        
+        
     } else if (![GKLocalPlayer localPlayer].isAuthenticated &&
                userAuthenticated) {
         NSLog(@"Authentication changed: player not authenticated");
@@ -94,7 +97,7 @@ static GCTurnBasedMatchHelper *sharedHelper = nil;
         [GKTurnBasedEventHandler sharedTurnBasedEventHandler];
         ev.delegate = self;
     };
-    
+
     NSLog(@"Authenticating local user...");
     if ([GKLocalPlayer localPlayer].authenticated == NO) {
         [[GKLocalPlayer localPlayer]
@@ -103,8 +106,10 @@ static GCTurnBasedMatchHelper *sharedHelper = nil;
     } else {
         NSLog(@"Already authenticated!");
         setGKEventHandlerDelegate(nil);
-    
+         [delegate userDidAuthenticate];
     }
+    
+    
 }
 
 - (void)findMatchWithMinPlayers:(int)minPlayers
@@ -226,6 +231,10 @@ static GCTurnBasedMatchHelper *sharedHelper = nil;
             //get the aliases
             NSLog(@"playeralias %@", player.alias);
             GKPlayer *aPlayer = [players objectAtIndex:1];
+            if([[GKLocalPlayer localPlayer].alias isEqualToString:aPlayer.alias])
+            {
+                aPlayer = [players objectAtIndex:0];
+            }
             appDel.oponentName = aPlayer.alias;
         }
         

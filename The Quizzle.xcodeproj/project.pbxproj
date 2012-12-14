@@ -423,7 +423,7 @@
 		B828401E1663B35F0087B3B6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Axel  Lundback";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Axel  Lundback (MKP87D5NEC)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Axel  Lundback";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "QuizGame/QuizGame-Prefix.pch";
@@ -431,7 +431,7 @@
 				INFOPLIST_FILE = "QuizGame/QuizGame-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6DF293AB-7873-4A6F-B267-0625E807350B";
+				PROVISIONING_PROFILE = "B0013C2D-3471-433F-BA7C-DFF9BB32F62F";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6DF293AB-7873-4A6F-B267-0625E807350B";
 				WRAPPER_EXTENSION = app;
 			};
@@ -440,14 +440,14 @@
 		B828401F1663B35F0087B3B6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Axel  Lundback";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Axel  Lundback (MKP87D5NEC)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Axel  Lundback";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "QuizGame/QuizGame-Prefix.pch";
 				INFOPLIST_FILE = "QuizGame/QuizGame-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6DF293AB-7873-4A6F-B267-0625E807350B";
+				PROVISIONING_PROFILE = "B0013C2D-3471-433F-BA7C-DFF9BB32F62F";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -479,14 +479,14 @@
 		B866F9F61667AAF0002AE260 /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Axel  Lundback";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Axel  Lundback (MKP87D5NEC)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Axel  Lundback";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "QuizGame/QuizGame-Prefix.pch";
 				INFOPLIST_FILE = "QuizGame/QuizGame-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6DF293AB-7873-4A6F-B267-0625E807350B";
+				PROVISIONING_PROFILE = "B0013C2D-3471-433F-BA7C-DFF9BB32F62F";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Distribution;
