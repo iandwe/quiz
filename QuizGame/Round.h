@@ -2,7 +2,7 @@
 //  Round.h
 //  The Quizzle
 //
-//  Created by Axel Lundbäck on 2012-11-29.
+//  Created by Axel Lundbäck on 2012-12-17.
 //  Copyright (c) 2012 Axel Lundbäck. All rights reserved.
 //
 
@@ -12,9 +12,12 @@
 
 @interface Round : NSManagedObject
 
-@property (nonatomic, retain) NSString * playerOneScore;
-@property (nonatomic, retain) NSString * playerTwoScore;
 @property (nonatomic, retain) NSDate * playerOneDate;
+@property (nonatomic, retain) NSString * playerOneScore;
 @property (nonatomic, retain) NSDate * playerTwoDate;
+@property (nonatomic, retain) NSString * playerTwoScore;
+@property (nonatomic, retain) NSString * matchId;
+@property (nonatomic, retain) NSString * category;
+@property (nonatomic, retain) NSNumber * roundCount;
 
 @end

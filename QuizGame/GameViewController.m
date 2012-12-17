@@ -17,6 +17,8 @@
 
 @implementation GameViewController {
     AXLAppDelegate *appDel;
+    NSString *pTwoScore;
+    int numberOfRows;
 }
 @synthesize playerOneScoreLabel;
 @synthesize playerTwoScoreLabel;
@@ -35,23 +37,28 @@
     return self;
 }
 
+
 - (void)viewDidLoad
 {
+    [[GCTurnBasedMatchHelper sharedInstance] authenticateLocalUser];
     appDel = (AXLAppDelegate*)[[UIApplication sharedApplication] delegate];
     havestartedgame = NO;
-    [GCTurnBasedMatchHelper sharedInstance].delegate = self;
+    
     NSLog(@"answerslabel %@", answerOne);
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     playerOneScoreLabel.text = answerOne;
     playerTwoScoreLabel.text = answerTwo;
-    
+    //[self insertNewObject];
     
     
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
+        
+    [GCTurnBasedMatchHelper sharedInstance].delegate = self;
+    self.statusLabel.text = [NSString stringWithFormat:@"din tur och spelare %d", [[GCTurnBasedMatchHelper sharedInstance] isPlayerOne]];
 //self.playBtnOutlet.hidden = YES;
     if(havestartedgame)
     {
@@ -61,12 +68,75 @@
     }
     playerOneNameLabel.text = [GKLocalPlayer localPlayer].alias;
     playerTwoNameLabel.text = appDel.oponentName;
-   
+    
 }
-
+-(NSManagedObjectContext *)context {
+    return [AXLSharedContext getSharedContext];
+}
+-(void)insertNewObjectWithScore:(NSString*)score
+{
+    
+    // Create a new instance of the entity managed by the fetched results controller.
+    Round *event;
+    event = [NSEntityDescription insertNewObjectForEntityForName:@"Round" inManagedObjectContext:self.context];
+    
+    
+    event.playerTwoScore = score;
+    event.playerTwoDate = [NSDate date];
+    event.matchId = [[[GCTurnBasedMatchHelper sharedInstance] currentMatch] matchID];
+    //event.category = category;
+    
+    // Save the context.
+    NSError *error = nil;
+    if (![self.context save:&error]) {
+        /*
+         Replace this implementation with code to handle the error appropriately.
+         
+         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+         */
+        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        abort();
+    }
+    
+}
+-(void)updateCoreDataObject {
+    // Fetched saved car.
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Round" inManagedObjectContext:[self managedObjectContext]];
+    [fetchRequest setEntity:entity];
+    
+    // Set predicate and sort orderings...
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"matchId = %@",[[[GCTurnBasedMatchHelper sharedInstance] currentMatch] matchID]];
+    [fetchRequest setPredicate:predicate];
+    
+    // Execute the fetch -- create a mutable copy of the result.
+    NSError *error = nil;
+    NSMutableArray *mutableFetchResults = [[self.managedObjectContext executeFetchRequest:fetchRequest error:&error] mutableCopy];
+    NSLog(@"[GameViewController] round: round not found. %d",[mutableFetchResults count] );
+    if (mutableFetchResults == nil || [mutableFetchResults count] == 0) {
+        // Handle the error.
+        NSLog(@"[GameViewController] round: round not found. %d",[mutableFetchResults count] );
+    }
+    else {
+        // Get car and assign new selected value.
+        int count = [mutableFetchResults count]-1;
+        Round *aRound = (Round *)[mutableFetchResults objectAtIndex:count];
+        [aRound setPlayerTwoScore:[[NSUserDefaults standardUserDefaults]objectForKey:@"score"]];
+        
+        // Save the car.
+        NSError *error = nil;
+        if (![self.managedObjectContext save:&error]) {
+            // Handle the error.
+            NSLog(@"[GameViewController] round: error saving round.");
+        }
+        else {
+            NSLog(@"[GameViewController] round: round saved.");
+        }
+    }
+    [self.myTableView reloadData];
+}
 -(void)userDidAuthenticate{
-    UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"" message:@"kulkul" delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
-    [av show];
+
     [[GCTurnBasedMatchHelper sharedInstance]
      findMatchWithMinPlayers:2 maxPlayers:2 viewController:self];
     
@@ -77,9 +147,18 @@
 -(void)enterNewGame:(GKTurnBasedMatch *)match {
     NSLog(@"Entering new game...");
     self.statusLabel.text = @"Player 1's Turn (that's you)";
+    if ([[NSUserDefaults standardUserDefaults] integerForKey:match.matchID]) {
+        NSLog(@"vi är på runda %d",[[NSUserDefaults standardUserDefaults] integerForKey:match.matchID]);
+    }
+    else {
+        [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:match.matchID];
+    }
+   
 }
 
 -(void)takeTurn:(GKTurnBasedMatch *)match {
+    int count;
+    NSString *storySoFar;
     NSLog(@"Taking turn for existing game...");
     self.playBtnOutlet.hidden = NO;
     playBtnShouldBeHidden = NO;
@@ -89,21 +168,45 @@
                               @"Player %d's Turn (that's you)", playerNum];
     self.statusLabel.text = statusString;
     if ([match.matchData bytes]) {
-        NSString *storySoFar = [NSString stringWithUTF8String:
+        storySoFar = [NSString stringWithUTF8String:
                                 [match.matchData bytes]];
         
         [[NSUserDefaults standardUserDefaults] setObject:storySoFar forKey:@"score"];
         //[self presentGameStatsWithString:storySoFar];
-        [self showAlertWithMessage:@"din tur knappen ska synas"];
+        [self showAlertWithMessage:[NSString stringWithFormat:@"din tur knappen ska synas runda %@", [storySoFar substringFromIndex:3]]];
+        
+        count = [[NSUserDefaults standardUserDefaults] integerForKey:match.matchID];
+        if ([[NSUserDefaults standardUserDefaults] integerForKey:match.matchID])
+        {
+            [[NSUserDefaults standardUserDefaults]removeObjectForKey:match.matchID];
+        }
+        [[NSUserDefaults standardUserDefaults] setInteger:[[storySoFar substringFromIndex:3] intValue] forKey:match.matchID];
     }
     
-    self.statusLabel.text = @"din tur";
+    
+    self.statusLabel.text = [NSString stringWithFormat:@"din tur och spelare %d", [[GCTurnBasedMatchHelper sharedInstance] isPlayerOne]];
+    
+    if ([[GCTurnBasedMatchHelper sharedInstance] isPlayerOne] && match.matchData != nil) {
+        
+        NSLog(@"uppdatera objekt för spelare ett");
+        [self updateCoreDataObject];
+    }
+    else if (![[GCTurnBasedMatchHelper sharedInstance] isPlayerOne] && match.matchData != nil){
+        if ([[NSUserDefaults standardUserDefaults] integerForKey:match.matchID]>numberOfRows || numberOfRows == 0)
+        {
+            [self insertNewObjectWithScore:[storySoFar substringToIndex:3]];
+            NSLog(@"lägg till objekt för spelare två rader %d och ronder %d", numberOfRows,[[NSUserDefaults standardUserDefaults] integerForKey:match.matchID]);
+        }
+        else {
+            NSLog(@"lägg inte till objekt för spelare två rader %d och ronder %d", numberOfRows,[[NSUserDefaults standardUserDefaults] integerForKey:match.matchID]);
+        }
+    }
 }
 
 -(void)layoutMatch:(GKTurnBasedMatch *)match {
     self.playBtnOutlet.hidden = YES;
     self.statusLabel.text = @"inte din tur";
-    [self showAlertWithMessage:@"inte din tur knappen ska inte synas"];
+    [self showAlertWithMessage:[NSString stringWithFormat:@"inte din tur knappen ska inte synas och match id %@", match.matchID]];
     
     NSLog(@"layout match");
     
@@ -125,7 +228,9 @@
     
 }
 
-
+-(void)sendNotice:(NSString *)notice forMatch:(GKTurnBasedMatch *)match {
+    
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -157,6 +262,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
+    numberOfRows = [sectionInfo numberOfObjects];
     return [sectionInfo numberOfObjects];
 }
 
@@ -352,7 +458,7 @@
     [super viewDidUnload];
 }
 - (IBAction)menuBtn:(id)sender {
-    
+    [self userDidAuthenticate];
     
 }
 - (IBAction)playbtnaction:(id)sender {

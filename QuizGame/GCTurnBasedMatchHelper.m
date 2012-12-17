@@ -13,6 +13,7 @@
 @synthesize delegate;
 @synthesize gameCenterAvailable;
 @synthesize currentMatch;
+@synthesize isPlayerOne;
 #pragma mark Initialization
 
 static GCTurnBasedMatchHelper *sharedHelper = nil;
@@ -234,6 +235,10 @@ static GCTurnBasedMatchHelper *sharedHelper = nil;
             if([[GKLocalPlayer localPlayer].alias isEqualToString:aPlayer.alias])
             {
                 aPlayer = [players objectAtIndex:0];
+                isPlayerOne = NO;
+            }
+            else {
+                isPlayerOne = YES;
             }
             appDel.oponentName = aPlayer.alias;
         }

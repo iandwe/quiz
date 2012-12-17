@@ -23,7 +23,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *btnThree;
 @property (strong, nonatomic) IBOutlet UIButton *btnFour;
 @property (strong, nonatomic) GKTurnBasedEventHandler *ev;
-
+@property (readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) NSString *category;
 
 

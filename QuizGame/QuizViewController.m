@@ -32,10 +32,11 @@
     int questionArr[3];
     NSDictionary *dict;
     NSDictionary *questionDict;
+    BOOL roundExists;
     
 }
 
-@synthesize questionLabel, statusLabel, btnFour, btnOne, btnThree, btnTwo, category;
+@synthesize questionLabel, statusLabel, btnFour, btnOne, btnThree, btnTwo, category, managedObjectContext = _managedObjectContext;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -50,36 +51,7 @@
     return [AXLSharedContext getSharedContext];
 }
 
-- (IBAction)btnAddToFavourites:(id)sender {
-    AXLAppDelegate *appDel = (AXLAppDelegate*)[[UIApplication sharedApplication] delegate];
-    
-        NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Round"];
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"playerTwoScore = %@",appDel.oponentName];
-        [fetchRequest setPredicate:predicate];
-        NSArray *results = [self.context executeFetchRequest:fetchRequest error:0];
-        Round *round = [results objectAtIndex:0];
-    
-        if ([results count]<1)
-        {
-            [self insertNewObject];
-        }
-        else
-        {
-            [self.context deleteObject:[results objectAtIndex:0]];
-        }
-        NSError *error = nil;
-        if (![self.context save:&error]) {
-            /*
-             Replace this implementation with code to handle the error appropriately.
-             
-             abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-             */
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
-    
 
-}
 -(void)insertNewObject
 {
  
@@ -88,10 +60,10 @@
     event = [NSEntityDescription insertNewObjectForEntityForName:@"Round" inManagedObjectContext:self.context];
     
     event.playerOneScore = [NSString stringWithFormat:@"%d", playerOneCorrectAnswers];
-    event.playerTwoScore = [[NSUserDefaults standardUserDefaults] objectForKey:@"score"];;
-   // event.playerOneDate = [[GKLocalPlayer localPlayer] alias];
     
-    
+    event.playerOneDate = [NSDate date];
+    event.matchId = [[[GCTurnBasedMatchHelper sharedInstance] currentMatch] matchID];
+    event.category = category;
     
     // Save the context.
     NSError *error = nil;
@@ -141,12 +113,73 @@
     
     
 }
+-(NSManagedObjectContext *)managedObjectContext {
+    return [AXLSharedContext getSharedContext];
+}
+
+-(void)checkIfCoreDataObjectExists {
+    // Fetched saved car.
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Round" inManagedObjectContext:[self managedObjectContext]];
+    [fetchRequest setEntity:entity];
+    
+    // Set predicate and sort orderings...
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"matchId = %@",[[[GCTurnBasedMatchHelper sharedInstance] currentMatch] matchID]];
+    [fetchRequest setPredicate:predicate];
+    
+    // Execute the fetch -- create a mutable copy of the result.
+    NSError *error = nil;
+    NSMutableArray *mutableFetchResults = [[self.managedObjectContext executeFetchRequest:fetchRequest error:&error] mutableCopy];
+    NSLog(@"[GameViewController] round: round not found. %d",[mutableFetchResults count] );
+    if (mutableFetchResults == nil || [mutableFetchResults count] == 0) {
+        // Handle the error.
+        NSLog(@"[GameViewController] round: round not found. %d",[mutableFetchResults count] );
+    }
+    else 
+    {
+        NSLog(@"uppdatera objekt i ronder");
+        int count = [mutableFetchResults count]-1;
+        Round *aRound = (Round *)[mutableFetchResults objectAtIndex:count];
+        [aRound setPlayerOneScore:[NSString stringWithFormat:@"%d", playerOneCorrectAnswers]];
+        [aRound setPlayerOneDate:[NSDate date]];
+        // Save the car.
+        NSError *error = nil;
+        if (![self.managedObjectContext save:&error]) {
+            // Handle the error.
+            NSLog(@"[GameViewController] round: error saving round.");
+        }
+        else {
+            NSLog(@"[GameViewController] round: round saved.");
+        }
+               
+    }
+   
+}
 - (IBAction)sendTurn:(id)sender {
+    
+    
+    
+    
+    
+    if ([[GCTurnBasedMatchHelper sharedInstance] isPlayerOne])
+    {
+        NSString *matchId = [[[GCTurnBasedMatchHelper sharedInstance] currentMatch] matchID];
+        int count = [[NSUserDefaults standardUserDefaults] integerForKey:matchId];
+        count++;
+        [[NSUserDefaults standardUserDefaults]removeObjectForKey:matchId];
+        [[NSUserDefaults standardUserDefaults] setInteger:count forKey:matchId];
+        [self insertNewObject];
+    }
+    else {
+        [self checkIfCoreDataObjectExists];
+    }
+    
     NSLog(@"send turn");
      NSString *qr = [NSString stringWithFormat:@"%d%d%d", questionArr[0], questionArr[1], questionArr[2]];
     NSLog(@"players %@", [[GCTurnBasedMatchHelper sharedInstance] currentMatch].participants);
-    NSString *str = [NSString  stringWithFormat:@"%@%@", qr, category];
+    NSString *str = [NSString  stringWithFormat:@"%@%d", qr, [[NSUserDefaults standardUserDefaults] integerForKey:[[[GCTurnBasedMatchHelper sharedInstance] currentMatch] matchID]]];
     [self sendTurnString:str];
+    
 }
 
 
@@ -154,6 +187,7 @@
 
 
 -(void)sendTurnString:(NSString*)string {
+    
     NSLog(@"send turnstring");
     GKTurnBasedMatch *currentMatch =
     [[GCTurnBasedMatchHelper sharedInstance] currentMatch];
@@ -293,7 +327,7 @@
 
 
 -(void)presentGameStatsWithString:(NSString*)string {
-    [self insertNewObject];
+    
      NSLog(@"presentGameStatsWithString");
     answerTwo = [[NSUserDefaults standardUserDefaults] objectForKey:@"score"];;
     
@@ -367,7 +401,7 @@ NSLog(@"checkPlayerOneAnswerWithTag");
         playerOneCorrectAnswers++;
 
         NSString *qr = [NSString stringWithFormat:@"%d%d%d%@", questionArr[0], questionArr[1], questionArr[2], category];
-        [self showAlertWithMessage:qr];
+        
     }
     else {
         

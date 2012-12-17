@@ -38,9 +38,9 @@
 		B866F9F316678741002AE260 /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = B866F9E616678741002AE260 /* SBJsonUTF8Stream.m */; };
 		B866F9F416678741002AE260 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = B866F9E816678741002AE260 /* SBJsonWriter.m */; };
 		B866F9FA1667B48C002AE260 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B866F9F81667B48C002AE260 /* Model.xcdatamodeld */; };
-		B866F9FD1667B546002AE260 /* Round.m in Sources */ = {isa = PBXBuildFile; fileRef = B866F9FC1667B546002AE260 /* Round.m */; };
 		B866FA001667B57D002AE260 /* AXLSharedContext.m in Sources */ = {isa = PBXBuildFile; fileRef = B866F9FF1667B57D002AE260 /* AXLSharedContext.m */; };
 		B866FA0C1667B634002AE260 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B866FA0B1667B634002AE260 /* CoreData.framework */; };
+		B88A90EF167F2BA4007FD8F3 /* Round.m in Sources */ = {isa = PBXBuildFile; fileRef = B88A90EE167F2BA4007FD8F3 /* Round.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -98,11 +98,12 @@
 		B866F9E716678741002AE260 /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
 		B866F9E816678741002AE260 /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
 		B866F9F91667B48C002AE260 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
-		B866F9FB1667B546002AE260 /* Round.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Round.h; sourceTree = "<group>"; };
-		B866F9FC1667B546002AE260 /* Round.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Round.m; sourceTree = "<group>"; };
 		B866F9FE1667B57D002AE260 /* AXLSharedContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXLSharedContext.h; sourceTree = "<group>"; };
 		B866F9FF1667B57D002AE260 /* AXLSharedContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AXLSharedContext.m; sourceTree = "<group>"; };
 		B866FA0B1667B634002AE260 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		B88A90ED167F2BA4007FD8F3 /* Round.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Round.h; sourceTree = "<group>"; };
+		B88A90EE167F2BA4007FD8F3 /* Round.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Round.m; sourceTree = "<group>"; };
+		B88A90F0167F2E63007FD8F3 /* Model1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = Model1.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -243,9 +244,9 @@
 			children = (
 				B866F9FE1667B57D002AE260 /* AXLSharedContext.h */,
 				B866F9FF1667B57D002AE260 /* AXLSharedContext.m */,
+				B88A90ED167F2BA4007FD8F3 /* Round.h */,
+				B88A90EE167F2BA4007FD8F3 /* Round.m */,
 				B866F9F81667B48C002AE260 /* Model.xcdatamodeld */,
-				B866F9FB1667B546002AE260 /* Round.h */,
-				B866F9FC1667B546002AE260 /* Round.m */,
 			);
 			name = CoreData;
 			sourceTree = "<group>";
@@ -339,8 +340,8 @@
 				B866F9F316678741002AE260 /* SBJsonUTF8Stream.m in Sources */,
 				B866F9F416678741002AE260 /* SBJsonWriter.m in Sources */,
 				B866F9FA1667B48C002AE260 /* Model.xcdatamodeld in Sources */,
-				B866F9FD1667B546002AE260 /* Round.m in Sources */,
 				B866FA001667B57D002AE260 /* AXLSharedContext.m in Sources */,
+				B88A90EF167F2BA4007FD8F3 /* Round.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -423,16 +424,16 @@
 		B828401E1663B35F0087B3B6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Axel  Lundback (MKP87D5NEC)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Axel  Lundback";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "QuizGame/QuizGame-Prefix.pch";
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				INFOPLIST_FILE = "QuizGame/QuizGame-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "B0013C2D-3471-433F-BA7C-DFF9BB32F62F";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6DF293AB-7873-4A6F-B267-0625E807350B";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -440,14 +441,14 @@
 		B828401F1663B35F0087B3B6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Axel  Lundback (MKP87D5NEC)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Axel  Lundback";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "QuizGame/QuizGame-Prefix.pch";
 				INFOPLIST_FILE = "QuizGame/QuizGame-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "B0013C2D-3471-433F-BA7C-DFF9BB32F62F";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -479,14 +480,14 @@
 		B866F9F61667AAF0002AE260 /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Axel  Lundback (MKP87D5NEC)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Axel  Lundback";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "QuizGame/QuizGame-Prefix.pch";
 				INFOPLIST_FILE = "QuizGame/QuizGame-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "B0013C2D-3471-433F-BA7C-DFF9BB32F62F";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Distribution;
@@ -520,9 +521,10 @@
 		B866F9F81667B48C002AE260 /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				B88A90F0167F2E63007FD8F3 /* Model1.xcdatamodel */,
 				B866F9F91667B48C002AE260 /* Model.xcdatamodel */,
 			);
-			currentVersion = B866F9F91667B48C002AE260 /* Model.xcdatamodel */;
+			currentVersion = B88A90F0167F2E63007FD8F3 /* Model1.xcdatamodel */;
 			path = Model.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

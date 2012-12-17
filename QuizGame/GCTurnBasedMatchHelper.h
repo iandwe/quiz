@@ -32,7 +32,7 @@
 @property (nonatomic, strong) id <GCTurnBasedMatchHelperDelegate> delegate;
 @property (assign, readonly) BOOL gameCenterAvailable;
 @property (nonatomic, strong) GKTurnBasedMatch *currentMatch;
-
+@property (nonatomic) BOOL isPlayerOne;
 + (GCTurnBasedMatchHelper *)sharedInstance;
 - (void)authenticateLocalUser;
 - (void)authenticationChanged;
