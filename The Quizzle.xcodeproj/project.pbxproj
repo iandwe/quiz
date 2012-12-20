@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		87EF20A916833ECE00167719 /* splashtest1.png in Resources */ = {isa = PBXBuildFile; fileRef = 87EF20A816833ECE00167719 /* splashtest1.png */; };
 		B8283FFE1663B35F0087B3B6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8283FFD1663B35F0087B3B6 /* UIKit.framework */; };
 		B82840001663B35F0087B3B6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8283FFF1663B35F0087B3B6 /* Foundation.framework */; };
 		B82840021663B35F0087B3B6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B82840011663B35F0087B3B6 /* CoreGraphics.framework */; };
@@ -44,6 +45,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		87EF20A816833ECE00167719 /* splashtest1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splashtest1.png; sourceTree = "<group>"; };
 		B8283FF91663B35F0087B3B6 /* QuizGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuizGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8283FFD1663B35F0087B3B6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B8283FFF1663B35F0087B3B6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -122,6 +124,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		87EF20AB16833ED600167719 /* images */ = {
+			isa = PBXGroup;
+			children = (
+				87EF20A816833ECE00167719 /* splashtest1.png */,
+			);
+			name = images;
+			sourceTree = "<group>";
+		};
 		B8283FEE1663B35F0087B3B6 = {
 			isa = PBXGroup;
 			children = (
@@ -154,6 +164,7 @@
 		B82840031663B35F0087B3B6 /* QuizGame */ = {
 			isa = PBXGroup;
 			children = (
+				87EF20AB16833ED600167719 /* images */,
 				B866F9F71667B437002AE260 /* CoreData */,
 				B866F9CF1667872F002AE260 /* SBJSON */,
 				B866F9CE16678628002AE260 /* classes */,
@@ -309,6 +320,7 @@
 				B82840141663B35F0087B3B6 /* Default-568h@2x.png in Resources */,
 				B82840171663B35F0087B3B6 /* MainStoryboard.storyboard in Resources */,
 				B866F9CB1667861D002AE260 /* questions.json in Resources */,
+				87EF20A916833ECE00167719 /* splashtest1.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

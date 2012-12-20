@@ -81,9 +81,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
     timedOut = NO;
     alreadyanswered = NO;
     self.nextQoutlet.hidden = YES;
+    
+    self.statusLabel.text = @"";
     
     NSLog(@"View did load quizviewcontroller");
    // [GCTurnBasedMatchHelper sharedInstance].delegate = self;
@@ -100,13 +103,14 @@
 
     [self setQuestionsWithDict:questionDict];
     //mainTextController.text = [NSString stringWithUTF8String:[[[[GCTurnBasedMatchHelper sharedInstance] currentMatch] matchData]bytes]];
+    [self animateProgressView2];
 
     // Do any additional setup after loading the view from its nib.
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    [self animateProgressView2];
+    
 }
 
 -(void)updateProgressBar
@@ -116,6 +120,7 @@
         //Invalidate timer when time reaches 0
         [timer invalidate];
         timedOut = YES;
+        self.statusLabel.text = @"Time is up!";
         // säg att answerbutton är tryckt med 5 som inte finns alltså är ett fel svar.
         [self answerbuttonPressedConsequences:5];
     }
@@ -399,6 +404,9 @@
 
 - (IBAction)answerBtnPressed:(UIButton*)sender {
 
+    NSLog(@"should stop timer");
+    [timer invalidate];
+    
     [self answerbuttonPressedConsequences:sender.tag];
     
     
@@ -429,8 +437,8 @@
 - (IBAction)nextQAction:(id)sender {
     [(UIButton*)[self.view viewWithTag:answerTag]setBackgroundColor:[UIColor clearColor]];
      [(UIButton*)[self.view viewWithTag:correctAnswer]setBackgroundColor:[UIColor clearColor]];
+    self.statusLabel.text = @"";
     
-    [timer invalidate];
     [self animateProgressView2];
     
     if (turn == 3) {
@@ -475,6 +483,7 @@ NSLog(@"checkPlayerOneAnswerWithTag");
     
     if (tag == correctAnswer) {
         correct = YES;
+        self.statusLabel.text = @"Correct answer!";
         [(UIButton*)[self.view viewWithTag:tag]setBackgroundColor:[UIColor greenColor]];
         questionArr[turn-1] = 1;
         playerOneCorrectAnswers++;
@@ -486,8 +495,10 @@ NSLog(@"checkPlayerOneAnswerWithTag");
     }
     else {
         correct = NO;
+        
         if(!timedOut)
         {
+            self.statusLabel.text = @"Wrong answer!";
             [(UIButton*)[self.view viewWithTag:tag]setBackgroundColor:[UIColor redColor]];
             questionArr[turn-1] = 0;
         }

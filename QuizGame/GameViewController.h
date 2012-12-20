@@ -16,6 +16,7 @@
     BOOL havestartedgame;
     int totalScoreP1;
     int totalScoreP2;
+    UIActivityIndicatorView *spinner;
     
 }
 
@@ -30,6 +31,7 @@
 @property (retain, nonatomic) NSString *nameOne;
 @property (readonly) NSManagedObjectContext *context;
 
+@property (weak, nonatomic) IBOutlet UIImageView *splash;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (readonly) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) IBOutlet UITableView *myTableView;

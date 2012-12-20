@@ -39,6 +39,14 @@
 
 - (void)viewDidLoad
 {
+    CGRect frame = CGRectMake(0,0,self.view.frame.size.width, self.view.frame.size.height);
+    self.splash.frame = frame;
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [spinner setCenter:CGPointMake(self.view.frame.size.width/2.0, self.view.frame.size.height/2.0)]; // I do this because I'm in landscape mode
+    [self.view addSubview:spinner]; // spinner is not visible until started
+    [spinner startAnimating];
+    
     NSLog(@"view did load");
     totalScoreP1 = 0;
     totalScoreP2 = 0;
@@ -54,6 +62,8 @@
     
     
 }
+
+
 
 -(void)viewDidAppear:(BOOL)animated
 {
@@ -225,6 +235,7 @@
 NSLog(@"userDidAuthenticate");
     [[GCTurnBasedMatchHelper sharedInstance]
      findMatchWithMinPlayers:2 maxPlayers:2 viewController:self];
+    [spinner stopAnimating];
     
 }
 
@@ -246,6 +257,7 @@ NSLog(@"userDidAuthenticate");
     int count;
     NSString *storySoFar;
     NSLog(@"Taking turn for existing game...");
+    [self.splash setHidden:YES];
     
     int playerNum = [match.participants
                      indexOfObject:match.currentParticipant] + 1;
@@ -301,7 +313,7 @@ NSLog(@"userDidAuthenticate");
     NSLog(@"layout match");
     
     
-    
+    [self.splash setHidden:YES];
     NSLog(@"Viewing match where it's not our turn...");
     playBtnShouldBeHidden = YES;
     NSString *statusString;
@@ -650,6 +662,7 @@ NSLog(@"userDidAuthenticate");
     [self setScoreLabelP1:nil];
     [self setScoreLabelP2:nil];
    
+    [self setSplash:nil];
     [super viewDidUnload];
 }
 - (IBAction)menuBtn:(id)sender {
