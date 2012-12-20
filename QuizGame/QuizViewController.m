@@ -59,7 +59,7 @@
     Round *event;
     event = [NSEntityDescription insertNewObjectForEntityForName:@"Round" inManagedObjectContext:self.context];
     
-    event.playerOneScore = [NSString stringWithFormat:@"%d", playerOneCorrectAnswers];
+    event.playerOneScore = [NSString stringWithFormat:@"%d %d %d", questionArr[0], questionArr[1], questionArr[2]];
     
     event.playerOneDate = [NSDate date];
     event.matchId = [[[GCTurnBasedMatchHelper sharedInstance] currentMatch] matchID];
@@ -81,6 +81,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    timedOut = NO;
+    alreadyanswered = NO;
+    self.nextQoutlet.hidden = YES;
     
     NSLog(@"View did load quizviewcontroller");
    // [GCTurnBasedMatchHelper sharedInstance].delegate = self;
@@ -101,7 +104,39 @@
     // Do any additional setup after loading the view from its nib.
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [self animateProgressView2];
+}
 
+-(void)updateProgressBar
+{
+    if(time <= 0.0f)
+    {
+        //Invalidate timer when time reaches 0
+        [timer invalidate];
+        timedOut = YES;
+        // säg att answerbutton är tryckt med 5 som inte finns alltså är ett fel svar.
+        [self answerbuttonPressedConsequences:5];
+    }
+    else
+    {
+        time -= 0.01;
+        self.progressBar.progress = time;
+    }
+}
+
+-(void)animateProgressView2
+{
+    timedOut = NO;
+    self.progressBar.progress = 1;
+    time = 1;
+    timer = [NSTimer scheduledTimerWithTimeInterval: 0.1f
+                                             target: self
+                                           selector: @selector(updateProgressBar)
+                                           userInfo: nil
+                                            repeats: YES];
+}
 
 - (void)didReceiveMemoryWarning
 {
@@ -140,7 +175,7 @@
         NSLog(@"uppdatera objekt i ronder");
         int count = [mutableFetchResults count]-1;
         Round *aRound = (Round *)[mutableFetchResults objectAtIndex:count];
-        [aRound setPlayerOneScore:[NSString stringWithFormat:@"%d", playerOneCorrectAnswers]];
+        [aRound setPlayerOneScore:[NSString stringWithFormat:@"%d %d %d", questionArr[0], questionArr[1], questionArr[2]]];
         [aRound setPlayerOneDate:[NSDate date]];
         // Save the car.
         NSError *error = nil;
@@ -342,13 +377,18 @@
     gv.nameOne = [[GKLocalPlayer localPlayer] alias];
     gv.nameTwo = appDel.oponentName;
     gv.answerOne = [NSString stringWithFormat:@"%d %d %d", questionArr[0], questionArr[1], questionArr[2]];
-    gv.answerTwo = answerTwo;
+    gv.answerTwo = [NSString stringWithFormat:@"%d %d %d", questionArr[0], questionArr[1], questionArr[2]];
 
 }
 - (void)viewDidUnload {
    
 
     [self setStatusLabel:nil];
+    [self setNextQoutlet:nil];
+    [self setBox1:nil];
+    [self setBox2:nil];
+    [self setBox3:nil];
+    [self setProgressBar:nil];
     [super viewDidUnload];
 }
 - (IBAction)findPlayers:(id)sender {
@@ -358,55 +398,109 @@
 }
 
 - (IBAction)answerBtnPressed:(UIButton*)sender {
-NSLog(@"answerbtnpressed");
-    turn++;
-    //playerRounds++;
-   // NSLog(@"playerrounds1 %d", playerRounds);
-    if (turn == 3) {
-        
-        [self checkPlayerOneAnswerWithTag:sender.tag];
 
-        
-        [self sendTurn:nil];
-        
-    }
-    else {
-        
-        
-        //questionDict = [[dict objectForKey:@"questions"] objectAtIndex:turn];
-        
-        NSString *filePath = [[NSBundle mainBundle] pathForResource:@"questions" ofType:@"json"];
-        NSString *jsonString = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-        
-        SBJsonParser *jsonParser = [SBJsonParser new];
-        dict = [jsonParser objectWithString:jsonString];
-        
-        NSLog(@"json %@", [[dict objectForKey:@"questions"] objectAtIndex:1]);
-        questionDict = [[dict objectForKey:@"questions"] objectAtIndex:turn];
-        
-        [self checkPlayerOneAnswerWithTag:sender.tag];
-        [self setQuestionsWithDict:questionDict];
-        
-        NSLog(@"json %d", turn);
-    }
+    [self answerbuttonPressedConsequences:sender.tag];
     
     
 }
 
+-(void)answerbuttonPressedConsequences:(NSInteger)thetag
+{
+    if(!alreadyanswered)
+    {
+        self.nextQoutlet.hidden = NO;
+        NSLog(@"answerbtnpressed");
+        turn++;
+        answerTag = thetag;
+        [self checkPlayerOneAnswerWithTag:answerTag];
+        alreadyanswered = YES;
+        
+        
+        
+        
+        if (turn == 3)
+        {
+            
+            self.nextQoutlet.titleLabel.text = @"Finish round";
+        }
+    }
+}
+
+- (IBAction)nextQAction:(id)sender {
+    [(UIButton*)[self.view viewWithTag:answerTag]setBackgroundColor:[UIColor clearColor]];
+     [(UIButton*)[self.view viewWithTag:correctAnswer]setBackgroundColor:[UIColor clearColor]];
+    
+    [timer invalidate];
+    [self animateProgressView2];
+    
+    if (turn == 3) {
+        [timer invalidate];
+        alreadyanswered = NO;
+        //[self checkPlayerOneAnswerWithTag:answerTag];
+        [self sendTurn:nil];
+        
+    }
+    else
+    {
+    
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"questions" ofType:@"json"];
+    NSString *jsonString = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+    
+    SBJsonParser *jsonParser = [SBJsonParser new];
+    dict = [jsonParser objectWithString:jsonString];
+    
+    NSLog(@"json %@", [[dict objectForKey:@"questions"] objectAtIndex:1]);
+    questionDict = [[dict objectForKey:@"questions"] objectAtIndex:turn];
+    
+    //[self checkPlayerOneAnswerWithTag:answerTag];
+    [self setQuestionsWithDict:questionDict];
+    
+    NSLog(@"json %d", turn);
+    
+    alreadyanswered = NO;
+    }
+    self.nextQoutlet.hidden = YES;
+}
+
 -(void)checkPlayerOneAnswerWithTag:(int)tag {
 
-NSLog(@"checkPlayerOneAnswerWithTag");    
+NSLog(@"checkPlayerOneAnswerWithTag");
+   
+    
+    BOOL correct = NO;
+    UIView *boxToUse;
+    if(turn == 1){boxToUse = self.box1;}
+    else if(turn == 2){boxToUse = self.box2;}
+    else{boxToUse = self.box3;}
+    
     if (tag == correctAnswer) {
+        correct = YES;
+        [(UIButton*)[self.view viewWithTag:tag]setBackgroundColor:[UIColor greenColor]];
         questionArr[turn-1] = 1;
         playerOneCorrectAnswers++;
 
         NSString *qr = [NSString stringWithFormat:@"%d%d%d%@", questionArr[0], questionArr[1], questionArr[2], category];
         
+        
+        
     }
     else {
+        correct = NO;
+        if(!timedOut)
+        {
+            [(UIButton*)[self.view viewWithTag:tag]setBackgroundColor:[UIColor redColor]];
+            questionArr[turn-1] = 0;
+        }
         
+        [(UIButton*)[self.view viewWithTag:correctAnswer]setBackgroundColor:[UIColor greenColor]];
         questionArr[turn-1] = 0;
     }
+    
+    if(correct)
+    {
+        [boxToUse setBackgroundColor:[UIColor greenColor]];
+    }
+    else{[boxToUse setBackgroundColor:[UIColor redColor]];}
     
    
 }

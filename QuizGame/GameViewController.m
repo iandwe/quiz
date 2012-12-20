@@ -20,8 +20,7 @@
     NSString *pTwoScore;
     int numberOfRows;
 }
-@synthesize playerOneScoreLabel;
-@synthesize playerTwoScoreLabel;
+
 @synthesize playerTwoNameLabel;
 @synthesize playerOneNameLabel;
 @synthesize answerOne, answerTwo, nameOne, nameTwo;
@@ -40,15 +39,17 @@
 
 - (void)viewDidLoad
 {
+    NSLog(@"view did load");
+    totalScoreP1 = 0;
+    totalScoreP2 = 0;
     [[GCTurnBasedMatchHelper sharedInstance] authenticateLocalUser];
     appDel = (AXLAppDelegate*)[[UIApplication sharedApplication] delegate];
     havestartedgame = NO;
     
-    NSLog(@"answerslabel %@", answerOne);
-    [super viewDidLoad];
+        [super viewDidLoad];
+    NSLog(@"view did load end");
     // Do any additional setup after loading the view from its nib.
-    playerOneScoreLabel.text = answerOne;
-    playerTwoScoreLabel.text = answerTwo;
+    
     //[self insertNewObject];
     
     
@@ -56,9 +57,9 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
-        
+    NSLog(@"view did appear");
     [GCTurnBasedMatchHelper sharedInstance].delegate = self;
-    self.statusLabel.text = [NSString stringWithFormat:@"din tur och spelare %d", [[GCTurnBasedMatchHelper sharedInstance] isPlayerOne]];
+    self.statusLabel.text = @"den andres tur väntar...";
 //self.playBtnOutlet.hidden = YES;
     if(havestartedgame)
     {
@@ -66,10 +67,95 @@
         self.statusLabel.text = @"den andres tur. väntar...";
         NSLog(@"view did appear should be hidden");
     }
+    if( [[[[GCTurnBasedMatchHelper sharedInstance] currentMatch] currentParticipant].playerID isEqualToString:[GKLocalPlayer localPlayer].playerID])
+    {
+        self.playBtnOutlet.hidden = NO;
+        self.statusLabel.text = @"din tur";
+    }
     playerOneNameLabel.text = [GKLocalPlayer localPlayer].alias;
     playerTwoNameLabel.text = appDel.oponentName;
     
+    [self setPlayerOnesTotalScore];
+    [self setPlayerTwosTotalScore];
+    
 }
+
+-(void)setPlayerOnesTotalScore
+{
+    NSLog(@"inne i setplayeronetotalscore");
+    int expense = 0;
+    for (NSManagedObject *object in [self.fetchedResultsController fetchedObjects]) {
+        NSString *objectExpenseNumber = [object valueForKey:@"playerOneScore"];
+        
+        NSString *trimmedStringForPlayerOne = [objectExpenseNumber stringByReplacingOccurrencesOfString:@" " withString:@""];
+        
+        if([trimmedStringForPlayerOne length] >= 3)
+        {
+        
+        NSString *letterOne = [trimmedStringForPlayerOne substringWithRange:NSMakeRange(0,1)];
+        NSString *lettertwo = [trimmedStringForPlayerOne substringWithRange:NSMakeRange(1,1)];
+        NSString *letterthree = [trimmedStringForPlayerOne substringWithRange:NSMakeRange(2,1)];
+        if([letterOne isEqualToString:@"1"])
+        {
+            expense ++;
+        }
+        if([lettertwo isEqualToString:@"1"])
+        {
+            expense ++;
+        }
+        if([letterthree isEqualToString:@"1"])
+        {
+            expense ++;
+        }
+        
+        }
+        
+        //float objectExpense = [objectExpenseNumber floatValue];
+        // NSLog(@"nsnumberscore frmo db: %f",objectExpense);
+        //expense = expense + objectExpense;
+    }
+   
+    NSString *strFromInt = [NSString stringWithFormat:@"%d",expense];
+    self.scoreLabelP1.text = strFromInt;
+}
+-(void)setPlayerTwosTotalScore
+{
+     NSLog(@"inne i setplayertwototalscore");
+    int expense = 0;
+    for (NSManagedObject *object in [self.fetchedResultsController fetchedObjects]) {
+        NSString *objectExpenseNumber = [object valueForKey:@"playerTwoScore"];
+        
+        NSString *trimmedStringForPlayerOne = [objectExpenseNumber stringByReplacingOccurrencesOfString:@" " withString:@""];
+       
+        if([trimmedStringForPlayerOne length] >= 3)
+        {
+        NSString *letterOne = [trimmedStringForPlayerOne substringWithRange:NSMakeRange(0,1)];
+        NSString *lettertwo = [trimmedStringForPlayerOne substringWithRange:NSMakeRange(1,1)];
+        NSString *letterthree = [trimmedStringForPlayerOne substringWithRange:NSMakeRange(2,1)];
+        if([letterOne isEqualToString:@"1"])
+        {
+            expense ++;
+                   }
+        if([lettertwo isEqualToString:@"1"])
+        {
+            expense ++;
+            
+        }
+        if([letterthree isEqualToString:@"1"])
+        {
+            expense ++;
+           
+        }
+        }
+        
+        //float objectExpense = [objectExpenseNumber floatValue];
+        // NSLog(@"nsnumberscore frmo db: %f",objectExpense);
+        //expense = expense + objectExpense;
+    }
+       NSString *strFromInt = [NSString stringWithFormat:@"%d",expense];
+    self.scoreLabelP2.text = strFromInt;
+}
+
 -(NSManagedObjectContext *)context {
     return [AXLSharedContext getSharedContext];
 }
@@ -136,7 +222,7 @@
     [self.myTableView reloadData];
 }
 -(void)userDidAuthenticate{
-
+NSLog(@"userDidAuthenticate");
     [[GCTurnBasedMatchHelper sharedInstance]
      findMatchWithMinPlayers:2 maxPlayers:2 viewController:self];
     
@@ -160,8 +246,7 @@
     int count;
     NSString *storySoFar;
     NSLog(@"Taking turn for existing game...");
-    self.playBtnOutlet.hidden = NO;
-    playBtnShouldBeHidden = NO;
+    
     int playerNum = [match.participants
                      indexOfObject:match.currentParticipant] + 1;
     NSString *statusString = [NSString stringWithFormat:
@@ -173,8 +258,8 @@
         
         [[NSUserDefaults standardUserDefaults] setObject:storySoFar forKey:@"score"];
         //[self presentGameStatsWithString:storySoFar];
-        [self showAlertWithMessage:[NSString stringWithFormat:@"din tur knappen ska synas runda %@", [storySoFar substringFromIndex:3]]];
-        
+       // [self showAlertWithMessage:[NSString stringWithFormat:@"din tur knappen ska synas runda %@", [storySoFar substringFromIndex:3]]];
+        playBtnShouldBeHidden = NO;
         count = [[NSUserDefaults standardUserDefaults] integerForKey:match.matchID];
         if ([[NSUserDefaults standardUserDefaults] integerForKey:match.matchID])
         {
@@ -199,14 +284,19 @@
         }
         else {
             NSLog(@"lägg inte till objekt för spelare två rader %d och ronder %d", numberOfRows,[[NSUserDefaults standardUserDefaults] integerForKey:match.matchID]);
+            
         }
     }
+    self.playBtnOutlet.hidden = NO;
+    playBtnShouldBeHidden = NO;
+  
 }
 
 -(void)layoutMatch:(GKTurnBasedMatch *)match {
+    NSLog(@"layoutmatch");
     self.playBtnOutlet.hidden = YES;
     self.statusLabel.text = @"inte din tur";
-    [self showAlertWithMessage:[NSString stringWithFormat:@"inte din tur knappen ska inte synas och match id %@", match.matchID]];
+    //[self showAlertWithMessage:[NSString stringWithFormat:@"inte din tur knappen ska inte synas och match id %@", match.matchID]];
     
     NSLog(@"layout match");
     
@@ -256,11 +346,13 @@
 // Customize the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    NSLog(@"numberofsectionsintableview");
     return [[self.fetchedResultsController sections] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    NSLog(@"numberofrowsinsection");
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
     numberOfRows = [sectionInfo numberOfObjects];
     return [sectionInfo numberOfObjects];
@@ -368,6 +460,9 @@
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
 {
     [self.myTableView beginUpdates];
+    
+   
+    
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
@@ -428,18 +523,115 @@
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
+    NSLog(@"configurecell");
     Round *round = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    UILabel *label1 = (UILabel *)[cell viewWithTag:1];
-    UILabel *label2 = (UILabel *)[cell viewWithTag:2];
+    //UILabel *label1 = (UILabel *)[cell viewWithTag:1];
+    //UILabel *label2 = (UILabel *)[cell viewWithTag:2];
+    
     UIImageView *mediaImage = (UIImageView *)[cell viewWithTag:1001];
-    label1.text = round.playerOneScore;
-    label2.text = round.playerTwoScore;
+    
+    
+    NSString *trimmedStringForPlayerOne = [round.playerOneScore stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSString *trimmedStringForPlayerTwo = [round.playerTwoScore stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    
+    
+    
+  
     
     //mediaImage.image = image;
     if (cell == nil) {
+        NSLog(@"ska skapa cell");
         cell = [[UITableViewCell alloc]
                 initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
-    } 
+        
+        
+               
+    }
+    if([trimmedStringForPlayerOne length] >= 3)
+    {
+    NSString *letterOne = [trimmedStringForPlayerOne substringWithRange:NSMakeRange(0,1)];
+    NSString *lettertwo = [trimmedStringForPlayerOne substringWithRange:NSMakeRange(1,1)];
+    NSString *letterthree = [trimmedStringForPlayerOne substringWithRange:NSMakeRange(2,1)];
+    UIView *firstPlayerPointOne = (UIView *)[cell viewWithTag:1];
+    UIView *firstPlayerPointtwo = (UIView *)[cell viewWithTag:2];
+    UIView *firstPlayerPointthree = (UIView *)[cell viewWithTag:3];
+        
+        //Här sätter vi färgen på player 1 rutor
+        if([letterOne isEqualToString:@"1"])
+        {
+            firstPlayerPointOne.backgroundColor = [UIColor greenColor];
+        }
+        else if([letterOne isEqualToString:@"0"])
+        {
+            firstPlayerPointOne.backgroundColor = [UIColor redColor];
+        }
+        
+        if([lettertwo isEqualToString:@"1"])
+        {
+            firstPlayerPointtwo.backgroundColor = [UIColor greenColor];
+        }
+        else if([lettertwo isEqualToString:@"0"])
+        {
+            firstPlayerPointtwo.backgroundColor = [UIColor redColor];
+        }
+        if([letterthree isEqualToString:@"1"])
+        {
+            firstPlayerPointthree.backgroundColor = [UIColor greenColor];
+        }
+        else if([letterthree isEqualToString:@"0"])
+        {
+            firstPlayerPointthree.backgroundColor = [UIColor redColor];
+        }
+    }
+    
+    if([trimmedStringForPlayerTwo length] >= 3)
+    {
+    NSString *letterfour = [trimmedStringForPlayerTwo substringWithRange:NSMakeRange(0,1)];
+    NSString *letterfive = [trimmedStringForPlayerTwo substringWithRange:NSMakeRange(1,1)];
+    NSString *lettersix = [trimmedStringForPlayerTwo substringWithRange:NSMakeRange(2,1)];
+    
+    UIView *secondPlayerPointOne = (UIView *)[cell viewWithTag:4];
+    UIView *secondPlayerPointtwo = (UIView *)[cell viewWithTag:5];
+    UIView *secondPlayerPointthree = (UIView *)[cell viewWithTag:6];
+        
+        //Här sätter vi färgen på player 2 rutor
+        if([letterfour isEqualToString:@"1"])
+        {
+            secondPlayerPointOne.backgroundColor = [UIColor greenColor];
+        }
+        else if([letterfour isEqualToString:@"0"])
+        {
+            secondPlayerPointOne.backgroundColor = [UIColor redColor];
+        }
+        
+        if([letterfive isEqualToString:@"1"])
+        {
+            secondPlayerPointtwo.backgroundColor = [UIColor greenColor];
+        }
+        else if([letterfive isEqualToString:@"0"])
+        {
+            secondPlayerPointtwo.backgroundColor = [UIColor redColor];
+        }
+        if([lettersix isEqualToString:@"1"])
+        {
+            secondPlayerPointthree.backgroundColor = [UIColor greenColor];
+        }
+        else if([lettersix isEqualToString:@"0"])
+        {
+            secondPlayerPointthree.backgroundColor = [UIColor redColor];
+        }
+    
+    }
+    
+    
+    UILabel *roundLabel = (UILabel *)[cell viewWithTag:21];
+    NSString *roundLabelText = [NSString stringWithFormat:@"Round %d",indexPath.row+1];
+    roundLabel.text = roundLabelText;
+   
+    
+    
+
 }
 
 ///
@@ -449,12 +641,15 @@
 - (void)viewDidUnload {
     [self setPlayerOneNameLabel:nil];
     [self setPlayerTwoNameLabel:nil];
-    [self setPlayerOneScoreLabel:nil];
-    [self setPlayerTwoScoreLabel:nil];
+   
     [self setMyTableView:nil];
     [self setStatusLabel:nil];
     [self setPlayBtnOutlet:nil];
     
+   
+    [self setScoreLabelP1:nil];
+    [self setScoreLabelP2:nil];
+   
     [super viewDidUnload];
 }
 - (IBAction)menuBtn:(id)sender {

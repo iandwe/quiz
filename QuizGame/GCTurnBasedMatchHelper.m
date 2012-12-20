@@ -104,6 +104,7 @@ static GCTurnBasedMatchHelper *sharedHelper = nil;
         [[GKLocalPlayer localPlayer]
          authenticateWithCompletionHandler:
          setGKEventHandlerDelegate];
+         NSLog(@"Authenticating stuff done");
     } else {
         NSLog(@"Already authenticated!");
         setGKEventHandlerDelegate(nil);

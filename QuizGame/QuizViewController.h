@@ -11,6 +11,14 @@
 
 
 @interface QuizViewController : UIViewController<UITextFieldDelegate>
+{
+
+    NSInteger answerTag;
+    BOOL alreadyanswered;
+    float time;
+    NSTimer *timer;
+    BOOL timedOut;
+}
 
 - (IBAction)sendTurn:(id)sender;
 - (IBAction)goBack:(id)sender;
@@ -28,6 +36,18 @@
 
 
 @property (readonly) NSManagedObjectContext *context;
+
+@property (weak, nonatomic) IBOutlet UIView *box1;
+@property (weak, nonatomic) IBOutlet UIView *box2;
+@property (weak, nonatomic) IBOutlet UIView *box3;
+
+
+
 - (IBAction)findPlayers:(id)sender;
 - (IBAction)answerBtnPressed:(UIButton*)sender;
+- (IBAction)nextQAction:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *nextQoutlet;
+
+@property (weak, nonatomic) IBOutlet UIProgressView *progressBar;
+
 @end

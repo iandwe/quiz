@@ -103,7 +103,7 @@
 		B866FA0B1667B634002AE260 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		B88A90ED167F2BA4007FD8F3 /* Round.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Round.h; sourceTree = "<group>"; };
 		B88A90EE167F2BA4007FD8F3 /* Round.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Round.m; sourceTree = "<group>"; };
-		B88A90F0167F2E63007FD8F3 /* Model1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = Model1.xcdatamodel; sourceTree = "<group>"; };
+		B88A90F0167F2E63007FD8F3 /* Model1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model1.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -377,7 +377,7 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Axel  Lundback";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Axel  Lundback (MKP87D5NEC)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -393,6 +393,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "8D329385-8EE6-4A7A-A512-D3EE552BDDB7";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B0013C2D-3471-433F-BA7C-DFF9BB32F62F";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -463,7 +464,7 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Axel  Lundback";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Axel  Lundback";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -472,6 +473,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "8D329385-8EE6-4A7A-A512-D3EE552BDDB7";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "671E291B-759E-4DF7-9794-A6E381A5B75A";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};

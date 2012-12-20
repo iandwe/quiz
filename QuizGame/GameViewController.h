@@ -14,13 +14,15 @@
 {
     BOOL playBtnShouldBeHidden;
     BOOL havestartedgame;
+    int totalScoreP1;
+    int totalScoreP2;
+    
 }
 
 @property (retain, nonatomic) IBOutlet UILabel *playerOneNameLabel;
 @property (retain, nonatomic) IBOutlet UILabel *playerTwoNameLabel;
 
-@property (retain, nonatomic) IBOutlet UILabel *playerOneScoreLabel;
-@property (retain, nonatomic) IBOutlet UILabel *playerTwoScoreLabel;
+
 
 @property (retain, nonatomic) NSString *answerOne;
 @property (retain, nonatomic) NSString *answerTwo;
@@ -35,6 +37,12 @@
 - (IBAction)menuBtn:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *playBtnOutlet;
 @property (weak, nonatomic) IBOutlet UIButton *playbtnaction;
+@property (weak, nonatomic) IBOutlet UILabel *scoreLabelP1;
+@property (weak, nonatomic) IBOutlet UILabel *scoreLabelP2;
 - (IBAction)playbtnaction:(id)sender;
+
+
+
+
 
 @end
