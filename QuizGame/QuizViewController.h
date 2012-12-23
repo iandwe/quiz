@@ -18,6 +18,8 @@
     float time;
     NSTimer *timer;
     BOOL timedOut;
+    BOOL alreadyFetchedQuestions;
+    NSDictionary *totalQuestionDict;
 }
 
 - (IBAction)sendTurn:(id)sender;

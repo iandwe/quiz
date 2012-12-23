@@ -81,6 +81,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    alreadyFetchedQuestions = NO;
     [self.navigationController setNavigationBarHidden:YES animated:NO];
     timedOut = NO;
     alreadyanswered = NO;
@@ -88,7 +89,7 @@
     
     self.statusLabel.text = @"";
     
-    NSLog(@"View did load quizviewcontroller");
+    /*NSLog(@"View did load quizviewcontroller");
    // [GCTurnBasedMatchHelper sharedInstance].delegate = self;
     
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"questions" ofType:@"json"];
@@ -101,7 +102,8 @@
     questionDict = [[dict objectForKey:@"questions"] objectAtIndex:turn];
     
 
-    [self setQuestionsWithDict:questionDict];
+    [self setQuestionsWithDict:questionDict];*/
+    [self getLanJson];
     //mainTextController.text = [NSString stringWithUTF8String:[[[[GCTurnBasedMatchHelper sharedInstance] currentMatch] matchData]bytes]];
     [self animateProgressView2];
 
@@ -451,7 +453,7 @@
     else
     {
     
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"questions" ofType:@"json"];
+    /*NSString *filePath = [[NSBundle mainBundle] pathForResource:@"questions" ofType:@"json"];
     NSString *jsonString = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
     
     SBJsonParser *jsonParser = [SBJsonParser new];
@@ -466,8 +468,87 @@
     NSLog(@"json %d", turn);
     
     alreadyanswered = NO;
+     */
+        if(alreadyFetchedQuestions)
+        {
+            questionDict = [[totalQuestionDict objectForKey:@"questions"] objectAtIndex:turn];
+            [self setQuestionsWithDict:questionDict];
+            
+            NSLog(@"json %d", turn);
+            
+            alreadyanswered = NO;
+        
+        }
+        else
+        {
+            [self getLanJson];
+        }
+        
     }
     self.nextQoutlet.hidden = YES;
+}
+
+-(void)getLanJson
+{
+    
+    //Det riktiga api anropet
+    //  NSString *urlEncodedLan = [fetchedUserLan urlEncodeUsingEncoding:NSUTF8StringEncoding];
+    //   NSURL *lanUrl = [NSURL URLWithString:[NSString stringWithFormat:@"http://hinnerdu.se/api/errands?location=%@", urlEncodedLan]];
+    
+    
+    
+    //Ett testanrop tillfälligt
+    
+    NSURL *tempUrl;
+    
+        tempUrl = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.iandwe.se/quiz/three_ran_quest_by_cat.php?category_id=27"]];
+   
+    
+    //  NSURL *tempUrl = [NSURL URLWithString:[NSString stringWithFormat:@"http://iandwe.se/hinnerdu/errands_by_kommun.json"]];
+    
+    //NSLog(@"min url: %@", tempUrl);
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:tempUrl
+                                                           cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
+                                                       timeoutInterval:10];
+    
+    [request setHTTPMethod: @"GET"];
+    
+    NSError *requestError;
+    NSURLResponse *urlResponse = nil;
+    
+    NSData *response1 = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&requestError];
+    
+    
+    
+    NSString *receivedString = [[NSString alloc] initWithData:response1 encoding:NSUTF8StringEncoding];
+    //NSString *response = [receivedString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    //NSLog(@"received string %@",receivedString);
+    
+    NSError *error;
+    // NSString *receivedString = [NSString stringWithContentsOfURL:cityUrl encoding:NSUTF8StringEncoding error:&error];
+    
+    SBJsonParser *json = [SBJsonParser new];
+
+    
+    totalQuestionDict = [json objectWithString:receivedString];
+    questionDict = [[totalQuestionDict objectForKey:@"questions"] objectAtIndex:turn];
+    //questionDict = [[dict objectForKey:@"questions"] objectAtIndex:turn];
+    //[self checkPlayerOneAnswerWithTag:answerTag];
+    [self setQuestionsWithDict:questionDict];
+    
+    NSLog(@"json %d", turn);
+    
+    alreadyanswered = NO;
+    if (!questionDict){
+        NSLog(@"%@", error);
+    }
+    else
+    {
+         NSLog(@"hämtning av frågor gick bra");
+        alreadyFetchedQuestions = YES;
+    }
+   
+    
 }
 
 -(void)checkPlayerOneAnswerWithTag:(int)tag {
