@@ -81,6 +81,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    //GameViewController *targetController= [[GameViewController alloc]init];
+    //targetController.roundNumber=roundNumber;
+   // GameViewController *gvc = [GameViewController alloc];
+ //   NSLog(@"roundNumber === %@",roundNumber);
     alreadyFetchedQuestions = NO;
     [self.navigationController setNavigationBarHidden:YES animated:NO];
     timedOut = NO;
@@ -262,8 +267,8 @@
             NSLog(@"nex part %@", nextParticipant);
         }
     }
-    
-    if ([data length] > 3800) {
+    NSInteger roundCounter = [[NSUserDefaults standardUserDefaults] integerForKey:@"roundcounter"];
+    if (roundCounter >= 8) {
         for (GKTurnBasedParticipant *part in currentMatch.participants) {
             part.matchOutcome = GKTurnBasedMatchOutcomeTied;
         }

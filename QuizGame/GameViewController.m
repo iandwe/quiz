@@ -10,6 +10,7 @@
 #import "AXLSharedContext.h"
 #import "Round.h"
 #import "AXLAppDelegate.h"
+#import "QuizViewController.h"
 
 @interface GameViewController ()
 
@@ -367,6 +368,8 @@ NSLog(@"userDidAuthenticate");
     NSLog(@"numberofrowsinsection");
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
     numberOfRows = [sectionInfo numberOfObjects];
+  
+   [[NSUserDefaults standardUserDefaults] setInteger:numberOfRows forKey:@"roundcounter"];
     return [sectionInfo numberOfObjects];
 }
 
@@ -640,6 +643,7 @@ NSLog(@"userDidAuthenticate");
     UILabel *roundLabel = (UILabel *)[cell viewWithTag:21];
     NSString *roundLabelText = [NSString stringWithFormat:@"Round %d",indexPath.row+1];
     roundLabel.text = roundLabelText;
+    
    
     
     
@@ -672,5 +676,9 @@ NSLog(@"userDidAuthenticate");
 - (IBAction)playbtnaction:(id)sender {
     
     havestartedgame = YES;
+    //int mynumber=100;
+   // QuizViewController *targetController= [[QuizViewController alloc]init];
+    //targetController.roundNumber=roundNumber;
+    //[self.navigationController pushViewController:targetController animated:YES];
 }
 @end

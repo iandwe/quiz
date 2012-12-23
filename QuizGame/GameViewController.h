@@ -10,6 +10,7 @@
 #import <CoreData/CoreData.h>
 #import "GCTurnBasedMatchHelper.h"
 
+
 @interface GameViewController : UIViewController<NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate, GCTurnBasedMatchHelperDelegate>
 {
     BOOL playBtnShouldBeHidden;
@@ -17,8 +18,10 @@
     int totalScoreP1;
     int totalScoreP2;
     UIActivityIndicatorView *spinner;
-    
+   
+   
 }
+
 
 @property (retain, nonatomic) IBOutlet UILabel *playerOneNameLabel;
 @property (retain, nonatomic) IBOutlet UILabel *playerTwoNameLabel;
@@ -48,3 +51,4 @@
 
 
 @end
+
